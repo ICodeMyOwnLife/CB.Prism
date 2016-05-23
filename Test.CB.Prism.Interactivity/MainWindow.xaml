@@ -1,0 +1,62 @@
+﻿<Window x:Class="Test.CB.Prism.Interactivity.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Test.CB.Prism.Interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:pi="clr-namespace:CB.Prism.Interactivity;assembly=CB.Prism.Interactivity"
+        xmlns:prm="http://prismlibrary.com/"
+        mc:Ignorable="d"
+        Title="MainWindow" SizeToContent="Height" Width="450">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <prm:InteractionRequestTrigger SourceObject="{Binding SaveFileDialogRequest}">
+            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="True" />
+        </prm:InteractionRequestTrigger>
+
+        <prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
+            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="True">
+                <pi:PopupAction.WindowContent>
+                    <Grid d:DataContext="{d:DesignInstance {x:Type local:ProgressViewModel}}">
+                        <ProgressBar Minimum="0" Maximum="1" Height="16" Width="250"
+                                     Value="{Binding Progress, Mode=OneWay}" />
+                    </Grid>
+                </pi:PopupAction.WindowContent>
+
+                <pi:PopupAction.WindowStyle>
+                    <Style TargetType="Window">
+                        <Setter Property="AllowsTransparency" Value="True" />
+                        <Setter Property="SizeToContent" Value="WidthAndHeight" />
+                        <Setter Property="WindowStyle" Value="None" />
+                    </Style>
+                </pi:PopupAction.WindowStyle>
+            </pi:PopupAction>
+        </prm:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding SaveFilePath}" />
+
+        <Button Grid.Row="1" Grid.Column="0" Content="Save"
+                Command="{Binding SaveCommand}" />
+
+        <Button Grid.Row="1" Grid.Column="1" Content="Show"
+                Command="{Binding ShowCommand}" />
+    </Grid>
+</Window>
