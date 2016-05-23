@@ -16,11 +16,19 @@
 
     <i:Interaction.Triggers>
         <prm:InteractionRequestTrigger SourceObject="{Binding SaveFileDialogRequest}">
-            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="True" />
+            <pi:PopupAction />
+        </prm:InteractionRequestTrigger>
+
+        <prm:InteractionRequestTrigger SourceObject="{Binding OpenFileDialogRequest}">
+            <pi:PopupAction />
+        </prm:InteractionRequestTrigger>
+
+        <prm:InteractionRequestTrigger SourceObject="{Binding BrowseFolderDialogRequest}">
+            <pi:PopupAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
-            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="True">
+            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="False">
                 <pi:PopupAction.WindowContent>
                     <Grid d:DataContext="{d:DesignInstance {x:Type local:ProgressViewModel}}">
                         <ProgressBar Minimum="0" Maximum="1" Height="16" Width="250"
@@ -43,6 +51,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -51,12 +60,18 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding SaveFilePath}" />
+                   Text="{Binding Path}" />
 
         <Button Grid.Row="1" Grid.Column="0" Content="Save"
                 Command="{Binding SaveCommand}" />
 
-        <Button Grid.Row="1" Grid.Column="1" Content="Show"
+        <Button Grid.Row="1" Grid.Column="1" Content="Open"
+                Command="{Binding OpenCommand}" />
+
+        <Button Grid.Row="2" Grid.Column="0" Content="Browse"
+                Command="{Binding BrowseCommand}" />
+
+        <Button Grid.Row="2" Grid.Column="1" Content="Show"
                 Command="{Binding ShowCommand}" />
     </Grid>
 </Window>

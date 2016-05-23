@@ -8,47 +8,6 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace CB.Prism.Interactivity
 {
-    public interface IFileDialogInfo: IConfirmation
-    {
-        #region Abstract
-        string FileName { get; set; }
-        string[] FileNames { get; set; }
-        #endregion
-
-
-        // TODO: Add properties for SaveFileDialog
-    }
-
-    public interface ISaveFileDialogInfo: IFileDialogInfo { }
-
-    public interface IOpenFileDialogInfo: IFileDialogInfo { }
-
-    public interface IBrowseFolderDialogInfo: IConfirmation
-    {
-        #region Abstract
-        string SelectedPath { get; set; }
-        #endregion
-    }
-
-    public abstract class FileDialogInfo: Confirmation, IFileDialogInfo
-    {
-        #region  Properties & Indexers
-        public string FileName { get; set; }
-        public string[] FileNames { get; set; }
-        #endregion
-    }
-
-    public class BrowseFolderDialogInfo: Confirmation, IBrowseFolderDialogInfo
-    {
-        #region  Properties & Indexers
-        public string SelectedPath { get; set; }
-        #endregion
-    }
-
-    public class SaveFileDialogInfo: FileDialogInfo, ISaveFileDialogInfo { }
-
-    public class OpenFileDialogInfo: FileDialogInfo, IOpenFileDialogInfo { }
-
     public class PopupAction: PopupWindowAction
     {
         #region Override
@@ -60,8 +19,7 @@ namespace CB.Prism.Interactivity
                 return;
             }
 
-            // If the WindowContent shouldn't be part of another visual tree.
-            if (WindowContent != null && WindowContent.Parent != null)
+            if (WindowContent?.Parent != null)
             {
                 return;
             }
@@ -69,8 +27,13 @@ namespace CB.Prism.Interactivity
             var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
             if (saveFileDialogInfo != null)
             {
-                var saveFileDialog = new SaveFileDialog();
-                OpenFileDialog(saveFileDialogInfo, saveFileDialog);
+                var saveFileDialog = new SaveFileDialog
+                {
+                    CreatePrompt = saveFileDialogInfo.CreatePrompt,
+                    OverwritePrompt = saveFileDialogInfo.OverwritePrompt
+                };
+
+                HandleFileDialog(saveFileDialogInfo, saveFileDialog);
                 args.Callback?.Invoke();
                 return;
             }
@@ -78,8 +41,14 @@ namespace CB.Prism.Interactivity
             var openFileDialogInfo = args.Context as IOpenFileDialogInfo;
             if (openFileDialogInfo != null)
             {
-                var openFileDialog = new OpenFileDialog();
-                OpenFileDialog(openFileDialogInfo, openFileDialog);
+                var openFileDialog = new OpenFileDialog
+                {
+                    Multiselect = openFileDialogInfo.MultiSelect,
+                    ReadOnlyChecked = openFileDialogInfo.ReadOnlyChecked,
+                    ShowReadOnly = openFileDialogInfo.ShowReadOnly
+                };
+
+                HandleFileDialog(openFileDialogInfo, openFileDialog);
                 args.Callback?.Invoke();
                 return;
             }
@@ -99,19 +68,35 @@ namespace CB.Prism.Interactivity
 
 
         #region Implementation
-        private static void OpenFileDialog(IFileDialogInfo saveFileDialogInfo, FileDialog saveFileDialog)
+        private static void HandleFileDialog(IFileDialogInfo fileDialogInfo, FileDialog fileDialog)
         {
-            saveFileDialogInfo.Confirmed = saveFileDialog.ShowDialog() == true;
+            fileDialog.AddExtension = fileDialogInfo.AddExtension;
+            fileDialog.CheckFileExists = fileDialogInfo.CheckFileExists;
+            fileDialog.CheckPathExists = fileDialogInfo.CheckPathExists;
+            fileDialog.CustomPlaces = fileDialogInfo.CustomPlaces;
+            fileDialog.DefaultExt = fileDialogInfo.DefaultExt;
+            fileDialog.DereferenceLinks = fileDialogInfo.DerefenenceLinks;
+            fileDialog.Filter = fileDialogInfo.Filter;
+            fileDialog.FilterIndex = fileDialogInfo.FilterIndex;
+            fileDialog.InitialDirectory = fileDialogInfo.InitialDirectory;
+            fileDialog.Title = fileDialogInfo.Title;
+            fileDialog.ValidateNames = fileDialogInfo.ValidateNames;
 
-            if (!saveFileDialogInfo.Confirmed) return;
+            fileDialogInfo.Confirmed = fileDialog.ShowDialog() == true;
 
-            saveFileDialogInfo.FileName = saveFileDialog.FileName;
-            saveFileDialogInfo.FileNames = saveFileDialog.FileNames;
+            if (!fileDialogInfo.Confirmed) return;
+
+            fileDialogInfo.FileName = fileDialog.FileName;
+            fileDialogInfo.FileNames = fileDialog.FileNames;
         }
 
         private static void OpenFolderDialog(IBrowseFolderDialogInfo browseFolderDialogInfo,
             FolderBrowserDialog browseFolderDialog)
         {
+            browseFolderDialog.Description = browseFolderDialogInfo.Description;
+            browseFolderDialog.RootFolder = browseFolderDialogInfo.RootFolder;
+            browseFolderDialog.ShowNewFolderButton = browseFolderDialogInfo.ShowNewFolderButton;
+
             browseFolderDialogInfo.Confirmed = browseFolderDialog.ShowDialog() == DialogResult.OK;
 
             if (browseFolderDialogInfo.Confirmed)
@@ -119,13 +104,6 @@ namespace CB.Prism.Interactivity
                 browseFolderDialogInfo.SelectedPath = browseFolderDialog.SelectedPath;
             }
         }
-        #endregion
-    }
-
-    public interface IReportProgress<out T>: INotification
-    {
-        #region Abstract
-        T Progress { get; }
         #endregion
     }
 }
