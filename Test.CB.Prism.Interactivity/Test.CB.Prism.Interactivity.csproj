@@ -117,6 +117,10 @@
       <Project>{6A52CAE9-6F3E-4A20-96EB-0E6116A6709C}</Project>
       <Name>CB.Model.Prism</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CB.WPF\CB.Wpf.UserControls\CB.Wpf.UserControls.csproj">
+      <Project>{8c6499d1-de3a-4deb-a7d0-ed930423d24c}</Project>
+      <Name>CB.Wpf.UserControls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CB.Prism.Interactivity\CB.Prism.Interactivity.csproj">
       <Project>{640c072b-f368-4d76-9969-9c6bfe4070d3}</Project>
       <Name>CB.Prism.Interactivity</Name>

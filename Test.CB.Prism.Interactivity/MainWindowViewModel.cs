@@ -1,6 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using CB.Model.Common;
 using CB.Model.Prism;
 using CB.Prism.Interactivity;
+using CB.Wpf.UserControls;
 using Microsoft.Practices.Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 
@@ -20,7 +26,7 @@ namespace Test.CB.Prism.Interactivity
             BrowseCommand = new DelegateCommand(Browse);
             OpenCommand = new DelegateCommand(Open);
             SaveCommand = new DelegateCommand(Save);
-            ShowCommand = new DelegateCommand(Show);
+            ShowCommand = new DelegateCommand(Progress);
         }
         #endregion
 
@@ -49,8 +55,8 @@ namespace Test.CB.Prism.Interactivity
 
         public ICommand ShowCommand { get; }
 
-        public InteractionRequest<ProgressViewModel> WindowRequest { get; } =
-            new InteractionRequest<ProgressViewModel>();
+        public InteractionRequest<FileTransferProgressViewModel> WindowRequest { get; } =
+            new InteractionRequest<FileTransferProgressViewModel>();
         #endregion
 
 
@@ -63,12 +69,46 @@ namespace Test.CB.Prism.Interactivity
             => OpenFileDialogRequest.Raise(new OpenFileDialogInfo { Title = "Get Save Path" },
                 FileInfoAction);
 
+        public void Progress()
+        {
+            var fileProgressReporter = CreateFileProgressReporter();
+            WindowRequest.Raise(new FileTransferProgressViewModel
+            {
+                Title = "Progress",
+                ProgressReporter = fileProgressReporter
+            });
+        }
+
+        private static FileProgressReporter CreateFileProgressReporter()
+        {
+            const long FILE_SIZE = 6312487123;
+
+            var fileProgressReporter = new FileProgressReporter
+            {
+                FileName = "C:\\a.txt",
+                FileSize = FILE_SIZE
+            };
+            Task.Run(() =>
+            {
+                long transferred = 0;
+                var random = new Random(DateTime.Now.Millisecond);
+
+                while (transferred < FILE_SIZE)
+                {
+                    Thread.Sleep(100);
+                    var increase = random.Next(1000000, 10000000);
+                    transferred = transferred + increase >= FILE_SIZE ? FILE_SIZE : transferred + increase;
+                    Debug.WriteLine($"transferred: {transferred}");
+                    fileProgressReporter.Report(transferred);
+                }
+            });
+            fileProgressReporter.Start();
+            return fileProgressReporter;
+        }
+
         public void Save()
             => SaveFileDialogRequest.Raise(new SaveFileDialogInfo { Title = "Get Save Path" },
                 FileInfoAction);
-
-        public void Show()
-            => WindowRequest.Raise(ProgressViewModel.StartNew());
         #endregion
 
 

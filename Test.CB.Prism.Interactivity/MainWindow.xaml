@@ -7,6 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:pi="clr-namespace:CB.Prism.Interactivity;assembly=CB.Prism.Interactivity"
         xmlns:prm="http://prismlibrary.com/"
+        xmlns:userControls="clr-namespace:CB.Wpf.UserControls;assembly=CB.Wpf.UserControls"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="Height" Width="450">
 
@@ -30,19 +31,16 @@
         <prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
             <pi:PopupAction CenterOverAssociatedObject="True" IsModal="False">
                 <pi:PopupAction.WindowContent>
-                    <Grid d:DataContext="{d:DesignInstance {x:Type local:ProgressViewModel}}">
-                        <ProgressBar Minimum="0" Maximum="1" Height="16" Width="250"
-                                     Value="{Binding Progress, Mode=OneWay}" />
-                    </Grid>
+                    <userControls:FileTransferProgressControl></userControls:FileTransferProgressControl>
                 </pi:PopupAction.WindowContent>
 
-                <pi:PopupAction.WindowStyle>
+                <!--<pi:PopupAction.WindowStyle>
                     <Style TargetType="Window">
                         <Setter Property="AllowsTransparency" Value="True" />
                         <Setter Property="SizeToContent" Value="WidthAndHeight" />
                         <Setter Property="WindowStyle" Value="None" />
                     </Style>
-                </pi:PopupAction.WindowStyle>
+                </pi:PopupAction.WindowStyle>-->
             </pi:PopupAction>
         </prm:InteractionRequestTrigger>
     </i:Interaction.Triggers>
@@ -71,7 +69,7 @@
         <Button Grid.Row="2" Grid.Column="0" Content="Browse"
                 Command="{Binding BrowseCommand}" />
 
-        <Button Grid.Row="2" Grid.Column="1" Content="Show"
+        <Button Grid.Row="2" Grid.Column="1" Content="Progress"
                 Command="{Binding ShowCommand}" />
     </Grid>
 </Window>

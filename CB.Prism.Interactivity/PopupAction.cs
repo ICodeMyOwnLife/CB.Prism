@@ -14,15 +14,7 @@ namespace CB.Prism.Interactivity
         protected override void Invoke(object parameter)
         {
             var args = parameter as InteractionRequestedEventArgs;
-            if (args == null)
-            {
-                return;
-            }
-
-            if (WindowContent?.Parent != null)
-            {
-                return;
-            }
+            if (args == null || WindowContent?.Parent != null) return;
 
             var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
             if (saveFileDialogInfo != null)
