@@ -17,22 +17,22 @@
 
     <i:Interaction.Triggers>
         <prm:InteractionRequestTrigger SourceObject="{Binding SaveFileDialogRequest}">
-            <pi:PopupAction />
+            <pi:DialogTriggerAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding OpenFileDialogRequest}">
-            <pi:PopupAction />
+            <pi:DialogTriggerAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding BrowseFolderDialogRequest}">
-            <pi:PopupAction />
+            <pi:DialogTriggerAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
-            <pi:PopupAction CenterOverAssociatedObject="True" IsModal="False">
-                <pi:PopupAction.WindowContent>
+            <pi:DialogTriggerAction CenterOverAssociatedObject="True" IsModal="False">
+                <pi:DialogTriggerAction.WindowContent>
                     <userControls:FileTransferProgressControl></userControls:FileTransferProgressControl>
-                </pi:PopupAction.WindowContent>
+                </pi:DialogTriggerAction.WindowContent>
 
                 <!--<pi:PopupAction.WindowStyle>
                     <Style TargetType="Window">
@@ -41,7 +41,7 @@
                         <Setter Property="WindowStyle" Value="None" />
                     </Style>
                 </pi:PopupAction.WindowStyle>-->
-            </pi:PopupAction>
+            </pi:DialogTriggerAction>
         </prm:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 

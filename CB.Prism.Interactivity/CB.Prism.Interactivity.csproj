@@ -51,15 +51,19 @@
   <ItemGroup>
     <Compile Include="BrowseFolderDialogInfo.cs" />
     <Compile Include="FileDialogInfo.cs" />
+    <Compile Include="ConfirmationInteractionRequest.cs" />
+    <Compile Include="ConfirmationRequestEventArgs.cs" />
     <Compile Include="IBrowseFolderDialogInfo.cs" />
     <Compile Include="IFileDialogInfo.cs" />
+    <Compile Include="IGenericRequest.cs" />
     <Compile Include="IOpenFileDialogInfo.cs" />
     <Compile Include="IReportProgress.cs" />
     <Compile Include="ISaveFileDialogInfo.cs" />
     <Compile Include="OpenFileDialogInfo.cs" />
-    <Compile Include="PopupAction.cs" />
+    <Compile Include="DialogTriggerAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveFileDialogInfo.cs" />
+    <Compile Include="WindowTriggerAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

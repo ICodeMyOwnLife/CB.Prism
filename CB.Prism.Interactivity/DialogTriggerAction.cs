@@ -8,7 +8,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace CB.Prism.Interactivity
 {
-    public class PopupAction: PopupWindowAction
+    public class DialogTriggerAction: PopupWindowAction
     {
         #region Override
         protected override void Invoke(object parameter)
