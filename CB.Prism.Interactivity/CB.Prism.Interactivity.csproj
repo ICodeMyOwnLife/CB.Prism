@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CB.Prism.Interactivity</RootNamespace>
     <AssemblyName>CB.Prism.Interactivity</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +56,7 @@
     <Compile Include="ConfirmationRequestEventArgs.cs" />
     <Compile Include="IBrowseFolderDialogInfo.cs" />
     <Compile Include="IFileDialogInfo.cs" />
-    <Compile Include="IGenericRequest.cs" />
+    <Compile Include="IConfirmationRequest.cs" />
     <Compile Include="IOpenFileDialogInfo.cs" />
     <Compile Include="IReportProgress.cs" />
     <Compile Include="ISaveFileDialogInfo.cs" />

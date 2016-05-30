@@ -3,7 +3,7 @@ using System;
 
 namespace CB.Prism.Interactivity
 {
-    public interface IGenericRequest
+    public interface IConfirmationRequest
     {
         #region Abstract
         event EventHandler<ConfirmationRequestEventArgs> Raised;

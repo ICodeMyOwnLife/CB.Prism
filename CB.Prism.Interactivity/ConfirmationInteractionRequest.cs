@@ -4,7 +4,7 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace CB.Prism.Interactivity
 {
-    public class ConfirmationInteractionRequest<T>: IGenericRequest where T: IConfirmation
+    public class ConfirmationInteractionRequest<T>: IConfirmationRequest where T: IConfirmation
     {
         #region Events
         public event EventHandler<ConfirmationRequestEventArgs> Raised;
