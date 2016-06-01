@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interactivity;
@@ -11,6 +12,11 @@ namespace CB.Prism.Interactivity
 {
     public class WindowTriggerAction: TriggerAction<FrameworkElement>
     {
+        #region Fields
+        private static readonly IList<Window> _closedWindows = new List<Window>();
+        #endregion
+
+
         #region Dependency Properties
         public static readonly DependencyProperty CenterOverAssociatedObjectProperty =
             DependencyProperty.Register("CenterOverAssociatedObject", typeof(bool), typeof(WindowTriggerAction),
@@ -58,8 +64,9 @@ namespace CB.Prism.Interactivity
                 return;
             }
 
-            if (!Window.IsLoaded)
+            if (_closedWindows.Contains(Window))
             {
+                _closedWindows.Remove(Window);
                 Window = (Window)Activator.CreateInstance(Window.GetType());
             }
 
@@ -69,6 +76,7 @@ namespace CB.Prism.Interactivity
             handler =
                 (o, e) =>
                 {
+                    _closedWindows.Add(Window);
                     Window.Closed -= handler;
                     args.Context.Confirmed = Window.DialogResult == true;
                     callback?.Invoke();
@@ -99,6 +107,15 @@ namespace CB.Prism.Interactivity
             else
             {
                 Window.Show();
+            }
+        }
+
+        protected override void OnAttached()
+        {
+            var hostedWindow = AssociatedObject as Window ?? Window.GetWindow(AssociatedObject);
+            if (hostedWindow != null)
+            {
+                hostedWindow.Closed += delegate { Window.Close(); };
             }
         }
         #endregion
@@ -186,4 +203,4 @@ namespace CB.Prism.Interactivity
 }
 
 
-// TODO: Window is disposed: how to create new Window each time we call - not done
+// TODO: Window is disposed: how to create new Window each time we call - not done - don't know how to create new window which is defined in Xaml
