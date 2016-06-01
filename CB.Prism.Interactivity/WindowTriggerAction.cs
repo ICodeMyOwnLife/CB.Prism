@@ -186,4 +186,4 @@ namespace CB.Prism.Interactivity
 }
 
 
-// TODO: Window is disposed: how to create new Window each time we call
+// TODO: Window is disposed: how to create new Window each time we call - not done
