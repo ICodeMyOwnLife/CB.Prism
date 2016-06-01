@@ -115,7 +115,10 @@ namespace CB.Prism.Interactivity
             var hostedWindow = AssociatedObject as Window ?? Window.GetWindow(AssociatedObject);
             if (hostedWindow != null)
             {
-                hostedWindow.Closed += delegate { Window.Close(); };
+                hostedWindow.Closed += delegate
+                {
+                    Window?.Close();
+                };
             }
         }
         #endregion
