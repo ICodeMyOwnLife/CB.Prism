@@ -51,23 +51,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowseFolderDialogInfo.cs" />
+    <Compile Include="CallbackHelper.cs" />
+    <Compile Include="CommonInteractionRequest.cs" />
     <Compile Include="ConfirmContext.cs" />
     <Compile Include="FileDialogInfo.cs" />
-    <Compile Include="ConfirmationInteractionRequest.cs" />
-    <Compile Include="RequestContextEventArgs.cs" />
+    <Compile Include="IInteractionContextRequest.cs" />
+    <Compile Include="InteractionContextRequest.cs" />
+    <Compile Include="NotifyRequestProvider.cs" />
+    <Compile Include="RequestProviderBase.cs" />
+    <Compile Include="WindowRequestAction.cs" />
+    <Compile Include="INotifyContext.cs" />
+    <Compile Include="NotifyContext.cs" />
+    <Compile Include="ContextRequestEventArgs.cs" />
     <Compile Include="IBrowseFolderDialogInfo.cs" />
     <Compile Include="IConfirmContext.cs" />
     <Compile Include="IFileDialogInfo.cs" />
     <Compile Include="IConfirmationRequest.cs" />
     <Compile Include="IOpenFileDialogInfo.cs" />
     <Compile Include="IReportProgress.cs" />
-    <Compile Include="IRequestContext.cs" />
+    <Compile Include="IContextRequestObject.cs" />
     <Compile Include="ISaveFileDialogInfo.cs" />
     <Compile Include="OpenFileDialogInfo.cs" />
     <Compile Include="DialogTriggerAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestContext.cs" />
     <Compile Include="SaveFileDialogInfo.cs" />
+    <Compile Include="WindowRequest.cs" />
+    <Compile Include="WindowRequestEventArgs.cs" />
+    <Compile Include="WindowRequestTrigger.cs" />
     <Compile Include="WindowTriggerAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

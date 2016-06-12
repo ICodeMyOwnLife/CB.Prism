@@ -78,7 +78,7 @@ namespace CB.Prism.Interactivity
 
         protected override void Invoke(object parameter)
         {
-            var args = parameter as RequestContextEventArgs;
+            var args = parameter as ContextRequestEventArgs;
             if (args == null)
             {
                 return;
@@ -186,7 +186,7 @@ namespace CB.Prism.Interactivity
             return window;
         }*/
 
-        private Window InitializeWindow(RequestContextEventArgs args)
+        private Window InitializeWindow(ContextRequestEventArgs args)
         {
             var window = (Window)Activator.CreateInstance(WindowType);
             window.DataContext = args.Context;
@@ -267,7 +267,7 @@ namespace CB.Prism.Interactivity
             }
         }*/
 
-        private static void OpenDefaultWindow(RequestContextEventArgs args)
+        private static void OpenDefaultWindow(ContextRequestEventArgs args)
         {
             var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
             if (saveFileDialogInfo != null)

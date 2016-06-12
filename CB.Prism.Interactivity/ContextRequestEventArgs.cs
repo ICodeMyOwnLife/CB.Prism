@@ -3,12 +3,12 @@ using System;
 
 namespace CB.Prism.Interactivity
 {
-    public class RequestContextEventArgs: EventArgs
+    public class ContextRequestEventArgs: EventArgs
     {
         #region  Constructors & Destructor
-        public RequestContextEventArgs() { }
+        public ContextRequestEventArgs() { }
 
-        public RequestContextEventArgs(IRequestContext context, Action callback = null)
+        public ContextRequestEventArgs(IContextRequestObject context, Action callback = null)
         {
             Context = context;
             Callback = callback;
@@ -18,7 +18,7 @@ namespace CB.Prism.Interactivity
 
         #region  Properties & Indexers
         public Action Callback { get; set; }
-        public IRequestContext Context { get; set; }
+        public IContextRequestObject Context { get; set; }
         #endregion
     }
 
