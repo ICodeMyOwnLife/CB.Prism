@@ -7,46 +7,57 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:pi="clr-namespace:CB.Prism.Interactivity;assembly=CB.Prism.Interactivity"
         xmlns:prm="http://prismlibrary.com/"
-        xmlns:userControls="clr-namespace:CB.Wpf.UserControls;assembly=CB.Wpf.UserControls"
+        xmlns:xaml="http://wpf.cb.com/xaml"
         mc:Ignorable="d"
-        Title="MainWindow" SizeToContent="Height" Width="450">
+        Title="MainWindow" SizeToContent="Height" Width="450" WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
 
     <i:Interaction.Triggers>
-        <prm:InteractionRequestTrigger SourceObject="{Binding SaveFileDialogRequest}">
-            <pi:DialogTriggerAction />
+        <!--<prm:InteractionRequestTrigger SourceObject="{Binding SaveFileDialogRequest}">
+            <pi:WindowTriggerAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding OpenFileDialogRequest}">
-            <pi:DialogTriggerAction />
+            <pi:WindowTriggerAction />
         </prm:InteractionRequestTrigger>
 
         <prm:InteractionRequestTrigger SourceObject="{Binding BrowseFolderDialogRequest}">
-            <pi:DialogTriggerAction />
+            <pi:WindowTriggerAction />
+        </prm:InteractionRequestTrigger>-->
+
+        <prm:InteractionRequestTrigger SourceObject="{Binding IORequest}">
+            <pi:WindowTriggerAction />
         </prm:InteractionRequestTrigger>
 
-        <prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
+        <prm:InteractionRequestTrigger SourceObject="{Binding ProgressRequest}">
+            <pi:WindowTriggerAction CenterOverAssociatedObject="True" IsModal="False" WindowType="local:ProgressWindow" />
+        </prm:InteractionRequestTrigger>
+
+        <pi:WindowRequestTrigger SourceObject="{Binding WindowRequest}" />
+
+        <!--<prm:InteractionRequestTrigger SourceObject="{Binding WindowRequest}">
             <pi:DialogTriggerAction CenterOverAssociatedObject="True" IsModal="False">
                 <pi:DialogTriggerAction.WindowContent>
                     <userControls:FileTransferProgressControl></userControls:FileTransferProgressControl>
                 </pi:DialogTriggerAction.WindowContent>
 
-                <!--<pi:PopupAction.WindowStyle>
+                ~1~<pi:PopupAction.WindowStyle>
                     <Style TargetType="Window">
                         <Setter Property="AllowsTransparency" Value="True" />
                         <Setter Property="SizeToContent" Value="WidthAndHeight" />
                         <Setter Property="WindowStyle" Value="None" />
                     </Style>
-                </pi:PopupAction.WindowStyle>-->
+                </pi:PopupAction.WindowStyle>@1@
             </pi:DialogTriggerAction>
-        </prm:InteractionRequestTrigger>
+        </prm:InteractionRequestTrigger>-->
     </i:Interaction.Triggers>
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -71,5 +82,11 @@
 
         <Button Grid.Row="2" Grid.Column="1" Content="Progress"
                 Command="{Binding ShowCommand}" />
+
+        <ComboBox Grid.Row="3" Grid.Column="0" ItemsSource="{xaml:EnumValues pi:WindowRequestAction}"
+                  SelectedIndex="0" SelectedItem="{Binding SelectedRequestAction}" />
+
+        <Button Grid.Row="3" Grid.Column="1" Content="Execute Request"
+                Command="{Binding ExecuteRequestCommand}" />
     </Grid>
 </Window>

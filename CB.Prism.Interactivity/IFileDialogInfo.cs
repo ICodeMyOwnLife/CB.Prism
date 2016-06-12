@@ -5,7 +5,7 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace CB.Prism.Interactivity
 {
-    public interface IFileDialogInfo: IConfirmation
+    public interface IFileDialogInfo: IConfirmContext
     {
         #region Abstract
         bool AddExtension { get; }

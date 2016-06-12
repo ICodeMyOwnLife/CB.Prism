@@ -6,9 +6,7 @@ using System.Windows.Input;
 using CB.Model.Common;
 using CB.Model.Prism;
 using CB.Prism.Interactivity;
-using CB.Wpf.UserControls;
 using Microsoft.Practices.Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 
 
 namespace Test.CB.Prism.Interactivity
@@ -17,6 +15,7 @@ namespace Test.CB.Prism.Interactivity
     {
         #region Fields
         private string _path;
+        private WindowRequestAction? _selectedRequestAction;
         #endregion
 
 
@@ -24,6 +23,7 @@ namespace Test.CB.Prism.Interactivity
         public MainWindowViewModel()
         {
             BrowseCommand = new DelegateCommand(Browse);
+            ExecuteRequestCommand = new DelegateCommand(ExecuteRequest);
             OpenCommand = new DelegateCommand(Open);
             SaveCommand = new DelegateCommand(Save);
             ShowCommand = new DelegateCommand(Progress);
@@ -31,16 +31,23 @@ namespace Test.CB.Prism.Interactivity
         #endregion
 
 
-        #region  Properties & Indexers
+        #region  Commands
         public ICommand BrowseCommand { get; }
 
-        public InteractionRequest<IBrowseFolderDialogInfo> BrowseFolderDialogRequest { get; } =
-            new InteractionRequest<IBrowseFolderDialogInfo>();
+        public ICommand ExecuteRequestCommand { get; }
 
         public ICommand OpenCommand { get; }
 
-        public InteractionRequest<IOpenFileDialogInfo> OpenFileDialogRequest { get; } =
-            new InteractionRequest<IOpenFileDialogInfo>();
+        public ICommand SaveCommand { get; }
+
+        public ICommand ShowCommand { get; }
+        #endregion
+
+
+        #region  Properties & Indexers
+        public bool CanExecuteRequest => SelectedRequestAction.HasValue;
+
+        public CommonInteractionRequest IORequest { get; } = new CommonInteractionRequest();
 
         public string Path
         {
@@ -48,28 +55,53 @@ namespace Test.CB.Prism.Interactivity
             private set { SetProperty(ref _path, value); }
         }
 
-        public ICommand SaveCommand { get; }
+        /*public GenericInteractionRequest<IBrowseFolderDialogInfo> BrowseFolderDialogRequest { get; } =
+            new GenericInteractionRequest<IBrowseFolderDialogInfo>();*/
 
-        public InteractionRequest<ISaveFileDialogInfo> SaveFileDialogRequest { get; } =
-            new InteractionRequest<ISaveFileDialogInfo>();
+        /*public GenericInteractionRequest<IOpenFileDialogInfo> OpenFileDialogRequest { get; } =
+            new GenericInteractionRequest<IOpenFileDialogInfo>();*/
 
-        public ICommand ShowCommand { get; }
+        public CommonInteractionRequest ProgressRequest { get; } = new CommonInteractionRequest();
 
-        public InteractionRequest<FileTransferProgressViewModel> WindowRequest { get; } =
-            new InteractionRequest<FileTransferProgressViewModel>();
+        public WindowRequestAction? SelectedRequestAction
+        {
+            get { return _selectedRequestAction; }
+            set { SetProperty(ref _selectedRequestAction, value); }
+        }
+
+        public WindowRequest WindowRequest { get; } = new WindowRequest();
         #endregion
 
 
         #region Methods
-        public void Browse()
+        /*public void Browse()
             => BrowseFolderDialogRequest.Raise(new BrowseFolderDialogInfo { Title = "Browse folder" },
-                BrowseFolderInfoAction);
+                BrowseFolderInfoAction);*/
+
+        public void Browse()
+        {
+            var browseInfo = new BrowseFolderDialogInfo { Title = "Browse folder" };
+            IORequest.Raise(browseInfo, _ => BrowseFolderInfoAction(browseInfo));
+        }
+
+        public void ExecuteRequest()
+        {
+            if (!CanExecuteRequest) return;
+
+            WindowRequest.Raise(SelectedRequestAction.Value);
+        }
+
+        /*public void Open()
+            => OpenFileDialogRequest.Raise(new OpenFileDialogInfo { Title = "Get Save Path" },
+                FileInfoAction);*/
 
         public void Open()
-            => OpenFileDialogRequest.Raise(new OpenFileDialogInfo { Title = "Get Save Path" },
-                FileInfoAction);
+        {
+            var openInfo = new OpenFileDialogInfo { Title = "Get Save Path" };
+            IORequest.Raise(openInfo, _ => FileInfoAction(openInfo));
+        }
 
-        public void Progress()
+        /*public void Progress()
         {
             var fileProgressReporter = CreateFileProgressReporter();
             WindowRequest.Raise(new FileTransferProgressViewModel
@@ -77,6 +109,35 @@ namespace Test.CB.Prism.Interactivity
                 Title = "Progress",
                 ProgressReporter = fileProgressReporter
             });
+        }*/
+
+        public void Progress()
+        {
+            /*var fileProgressReporter = CreateFileProgressReporter();
+            ProgressRequest.Raise(new FileTransferProgressViewModel
+            {
+                Title = "Progress",
+                ProgressReporter = fileProgressReporter
+            });*/
+            ProgressRequest.Raise(new FileTransferProgressTestViewModel());
+        }
+
+        /*public void Save()
+            => SaveFileDialogRequest.Raise(new SaveFileDialogInfo { Title = "Get Save Path" },
+                FileInfoAction);*/
+
+        public void Save()
+        {
+            var saveInfo = new SaveFileDialogInfo { Title = "Get Save Path" };
+            IORequest.Raise(saveInfo, _ => FileInfoAction(saveInfo));
+        }
+        #endregion
+
+
+        #region Implementation
+        private void BrowseFolderInfoAction(IBrowseFolderDialogInfo info)
+        {
+            Path = info.Confirmed ? info.SelectedPath : null;
         }
 
         private static FileProgressReporter CreateFileProgressReporter()
@@ -106,22 +167,18 @@ namespace Test.CB.Prism.Interactivity
             return fileProgressReporter;
         }
 
-        public void Save()
-            => SaveFileDialogRequest.Raise(new SaveFileDialogInfo { Title = "Get Save Path" },
-                FileInfoAction);
-        #endregion
-
-
-        #region Implementation
-        private void BrowseFolderInfoAction(IBrowseFolderDialogInfo info)
-        {
-            Path = info.Confirmed ? info.SelectedPath : null;
-        }
-
         private void FileInfoAction(IFileDialogInfo info)
-        {
-            Path = info.Confirmed ? info.FileName : null;
-        }
+            => Path = info.Confirmed ? info.FileName : null;
         #endregion
+
+
+        /*public GenericInteractionRequest<ISaveFileDialogInfo> SaveFileDialogRequest { get; } =
+            new GenericInteractionRequest<ISaveFileDialogInfo>();*/
+
+        /*public InteractionRequest<FileTransferProgressViewModel> WindowRequest { get; } =
+            new InteractionRequest<FileTransferProgressViewModel>();*/
     }
 }
+
+
+// TODO: Test File Progress Pause, Resume, Cancel

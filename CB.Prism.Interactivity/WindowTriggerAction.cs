@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interactivity;
@@ -13,7 +14,7 @@ namespace CB.Prism.Interactivity
     public class WindowTriggerAction: TriggerAction<FrameworkElement>
     {
         #region Fields
-        private static readonly IList<Window> _closedWindows = new List<Window>();
+        private readonly IList<Window> _windows = new List<Window>();
         #endregion
 
 
@@ -37,76 +38,67 @@ namespace CB.Prism.Interactivity
             set { SetValue(IsModalProperty, value); }
         }
 
-        public static readonly DependencyProperty WindowContentProperty =
-            DependencyProperty.Register("Window", typeof(Window), typeof(WindowTriggerAction),
-                new PropertyMetadata(null));
+        public static readonly DependencyProperty WindowTypeProperty = DependencyProperty.Register(
+            nameof(WindowType), typeof(Type), typeof(WindowTriggerAction), new PropertyMetadata(default(Type)));
 
-        public Window Window
+        public Type WindowType
         {
-            get { return (Window)GetValue(WindowContentProperty); }
-            set { SetValue(WindowContentProperty, value); }
+            get { return (Type)GetValue(WindowTypeProperty); }
+            set { SetValue(WindowTypeProperty, value); }
         }
         #endregion
 
 
         #region Override
-        protected override void Invoke(object parameter)
+        /*protected override void Invoke(object parameter)
         {
-            var args = parameter as ConfirmationRequestEventArgs;
+            if (Window == null && WindowType == null)
+            {
+                OpenDefaultWindow(parameter);
+                return;
+            }
+
+            var args = parameter as RequestEventArgs<IRequestContext>;
             if (args == null)
             {
                 return;
             }
 
-            if (Window == null)
+            var window = InitializeWindow(args);
+
+            if (IsModal)
+            {
+                window.ShowDialog();
+            }
+            else
+            {
+                window.Show();
+            }
+        }*/
+
+        protected override void Invoke(object parameter)
+        {
+            var args = parameter as RequestContextEventArgs;
+            if (args == null)
+            {
+                return;
+            }
+
+            if (WindowType == null)
             {
                 OpenDefaultWindow(args);
                 return;
             }
 
-            if (_closedWindows.Contains(Window))
-            {
-                _closedWindows.Remove(Window);
-                Window = (Window)Activator.CreateInstance(Window.GetType());
-            }
-
-            Window.DataContext = args.Context;
-            var callback = args.Callback;
-            EventHandler handler = null;
-            handler =
-                (o, e) =>
-                {
-                    _closedWindows.Add(Window);
-                    Window.Closed -= handler;
-                    args.Context.Confirmed = Window.DialogResult == true;
-                    callback?.Invoke();
-                };
-            Window.Closed += handler;
-
-            if (CenterOverAssociatedObject && AssociatedObject != null)
-            {
-                SizeChangedEventHandler sizeHandler = null;
-                sizeHandler =
-                    (o, e) =>
-                    {
-                        Window.SizeChanged -= sizeHandler;
-
-                        var view = AssociatedObject;
-                        var position = view.PointToScreen(new Point(0, 0));
-
-                        Window.Top = position.Y + ((view.ActualHeight - Window.ActualHeight) / 2);
-                        Window.Left = position.X + ((view.ActualWidth - Window.ActualWidth) / 2);
-                    };
-                Window.SizeChanged += sizeHandler;
-            }
+            var window = InitializeWindow(args);
 
             if (IsModal)
             {
-                Window.ShowDialog();
+                window.ShowDialog();
             }
             else
             {
-                Window.Show();
+                window.Show();
             }
         }
 
@@ -117,7 +109,10 @@ namespace CB.Prism.Interactivity
             {
                 hostedWindow.Closed += delegate
                 {
-                    Window?.Close();
+                    foreach (var window in _windows.ToArray())
+                    {
+                        window.Close();
+                    }
                 };
             }
         }
@@ -147,7 +142,132 @@ namespace CB.Prism.Interactivity
             fileDialogInfo.FileNames = fileDialog.FileNames;
         }
 
-        private static void OpenDefaultWindow(ConfirmationRequestEventArgs args)
+        /*private Window GetOrCreateWindow(RequestEventArgs<IRequestContext> args)
+        {
+            var window = Window ?? (Window)Activator.CreateInstance(WindowType);
+
+            if (_closedWindows.Contains(window))
+            {
+                _closedWindows.Remove(Window);
+                window = (Window)Activator.CreateInstance(window.GetType());
+            }
+
+            window.DataContext = args.Context;
+            window.Title = args.Context.Title;
+            var callback = args.Callback;
+            EventHandler handler = null;
+
+            handler = delegate
+            {
+                _closedWindows.Add(window);
+                window.Closed -= handler;
+
+                var confirmationContext = args.Context as IConfirmContext;
+                if (confirmationContext != null) confirmationContext.Confirmed = window.DialogResult == true;
+
+                callback?.Invoke();
+            };
+            window.Closed += handler;
+
+            if (!CenterOverAssociatedObject || AssociatedObject == null) return window;
+
+            SizeChangedEventHandler sizeHandler = null;
+            sizeHandler = delegate
+            {
+                window.SizeChanged -= sizeHandler;
+
+                var view = AssociatedObject;
+                var position = view.PointToScreen(new Point(0, 0));
+
+                window.Top = position.Y + (view.ActualHeight - window.ActualHeight) / 2;
+                window.Left = position.X + (view.ActualWidth - window.ActualWidth) / 2;
+            };
+            window.SizeChanged += sizeHandler;
+            return window;
+        }*/
+
+        private Window InitializeWindow(RequestContextEventArgs args)
+        {
+            var window = (Window)Activator.CreateInstance(WindowType);
+            window.DataContext = args.Context;
+            window.Title = args.Context.Title;
+            var callback = args.Callback;
+            EventHandler handler = null;
+
+            handler = delegate
+            {
+                _windows.Remove(window);
+                window.Closed -= handler;
+
+                var confirmationContext = args.Context as IConfirmContext;
+                if (confirmationContext != null) confirmationContext.Confirmed = window.DialogResult == true;
+
+                callback?.Invoke();
+            };
+            window.Closed += handler;
+            _windows.Add(window);
+
+            if (!CenterOverAssociatedObject || AssociatedObject == null) return window;
+
+            SizeChangedEventHandler sizeHandler = null;
+            sizeHandler = delegate
+            {
+                window.SizeChanged -= sizeHandler;
+
+                var view = AssociatedObject;
+                var position = view.PointToScreen(new Point(0, 0));
+
+                window.Top = position.Y + (view.ActualHeight - window.ActualHeight) / 2;
+                window.Left = position.X + (view.ActualWidth - window.ActualWidth) / 2;
+            };
+            window.SizeChanged += sizeHandler;
+            return window;
+        }
+
+        /*private static void OpenDefaultWindow(object parameter)
+        {
+            var args = parameter as RequestEventArgs<IConfirmContext>;
+            if (args == null) return;
+
+            var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
+            if (saveFileDialogInfo != null)
+            {
+                var saveFileDialog = new SaveFileDialog
+                {
+                    CreatePrompt = saveFileDialogInfo.CreatePrompt,
+                    OverwritePrompt = saveFileDialogInfo.OverwritePrompt
+                };
+
+                HandleFileDialog(saveFileDialogInfo, saveFileDialog);
+                args.Callback?.Invoke();
+                return;
+            }
+
+            var openFileDialogInfo = args.Context as IOpenFileDialogInfo;
+            if (openFileDialogInfo != null)
+            {
+                var openFileDialog = new OpenFileDialog
+                {
+                    Multiselect = openFileDialogInfo.MultiSelect,
+                    ReadOnlyChecked = openFileDialogInfo.ReadOnlyChecked,
+                    ShowReadOnly = openFileDialogInfo.ShowReadOnly
+                };
+
+                HandleFileDialog(openFileDialogInfo, openFileDialog);
+                args.Callback?.Invoke();
+                return;
+            }
+
+            var browseFolderDialogInfo = args.Context as IBrowseFolderDialogInfo;
+            if (browseFolderDialogInfo != null)
+            {
+                var browseFolderDialog = new FolderBrowserDialog();
+                OpenFolderDialog(browseFolderDialogInfo, browseFolderDialog);
+                args.Callback?.Invoke();
+            }
+        }*/
+
+        private static void OpenDefaultWindow(RequestContextEventArgs args)
         {
             var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
             if (saveFileDialogInfo != null)
@@ -207,3 +327,4 @@ namespace CB.Prism.Interactivity
 
 
 // TODO: Window is disposed: how to create new Window each time we call - not done - don't know how to create new window which is defined in Xaml
+//

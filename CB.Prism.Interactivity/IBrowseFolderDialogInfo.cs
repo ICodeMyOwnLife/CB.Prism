@@ -4,7 +4,7 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace CB.Prism.Interactivity
 {
-    public interface IBrowseFolderDialogInfo: IConfirmation
+    public interface IBrowseFolderDialogInfo: IConfirmContext
     {
         #region Abstract
         string Description { get; }
