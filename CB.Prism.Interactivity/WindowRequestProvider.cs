@@ -1,5 +1,6 @@
+using System.ComponentModel;
 using System.Windows.Input;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 
 
 namespace CB.Prism.Interactivity
@@ -9,21 +10,13 @@ namespace CB.Prism.Interactivity
         #region  Constructors & Destructor
         public WindowRequestProvider()
         {
-            CloseWindowCommand = new DelegateCommand(CloseWindow);
-            HideWindowCommand = new DelegateCommand(HideWindow);
-
-            //RaiseCommand = new DelegateCommand<WindowRequestAction>(Raise);
-            ShowWindowCommand = new DelegateCommand(ShowWindow);
+            RaiseCommand = new DelegateCommand<object>(Raise);
         }
         #endregion
 
 
         #region  Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand HideWindowCommand { get; }
-
-        //public ICommand RaiseCommand { get; }
-        public ICommand ShowWindowCommand { get; }
+        public ICommand RaiseCommand { get; }
         #endregion
 
 
@@ -33,20 +26,13 @@ namespace CB.Prism.Interactivity
 
 
         #region Methods
-        public void CloseWindow()
-            => Raise(WindowRequestAction.Close);
-
-        public void HideWindow()
-            => Raise(WindowRequestAction.Hide);
-
-        public void Raise(WindowRequestAction requestAction)
-            => Request.Raise(requestAction);
-
-        public void ShowWindow()
-            => Raise(WindowRequestAction.Show);
+        public void Raise(object parameter)
+        {
+            var enumConverter = new EnumConverter(typeof(WindowRequestAction));
+            var value = enumConverter.ConvertFrom(parameter);
+            if (value == null) return;
+            Request.Raise((WindowRequestAction)value);
+        }
         #endregion
     }
 }
-
-
-// TODO: Complete WindowRequestProvider
