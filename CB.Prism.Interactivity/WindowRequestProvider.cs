@@ -28,10 +28,20 @@ namespace CB.Prism.Interactivity
         #region Methods
         public void Raise(object parameter)
         {
-            var enumConverter = new EnumConverter(typeof(WindowRequestAction));
-            var value = enumConverter.ConvertFrom(parameter);
-            if (value == null) return;
-            Request.Raise((WindowRequestAction)value);
+            WindowRequestAction action;
+            if (parameter is WindowRequestAction)
+            {
+                action = (WindowRequestAction)parameter;
+            }
+            else
+            {
+                var enumConverter = new EnumConverter(typeof(WindowRequestAction));
+                var value = enumConverter.ConvertFrom(parameter);
+                if (value == null) return;
+
+                action = (WindowRequestAction)value;
+            }
+            Request.Raise(action);
         }
         #endregion
     }
