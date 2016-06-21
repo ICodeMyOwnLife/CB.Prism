@@ -1,4 +1,5 @@
 ﻿using System;
+using Prism.Interactivity.InteractionRequest;
 
 
 namespace CB.Prism.Interactivity

@@ -75,6 +75,7 @@
     <Compile Include="CallbackHelper.cs" />
     <Compile Include="CommonInteractionRequest.cs" />
     <Compile Include="ConfirmContext.cs" />
+    <Compile Include="ConfirmRequestProvider.cs" />
     <Compile Include="FileDialogInfo.cs" />
     <Compile Include="IInteractionContextRequest.cs" />
     <Compile Include="InteractionContextRequest.cs" />
