@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
-using Prism.Interactivity.InteractionRequest;
 
 
 namespace CB.Prism.Interactivity
 {
+    
     public interface IFileDialogInfo: IConfirmContext
     {
         #region Abstract

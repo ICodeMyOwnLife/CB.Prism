@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
-using Prism.Interactivity.InteractionRequest;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 
 namespace CB.Prism.Interactivity
 {
-    public abstract class FileDialogInfo: Confirmation, IFileDialogInfo
+    public abstract class FileDialogInfo: ConfirmContext, IFileDialogInfo
     {
         #region  Properties & Indexers
         public bool AddExtension { get; set; } = true;
