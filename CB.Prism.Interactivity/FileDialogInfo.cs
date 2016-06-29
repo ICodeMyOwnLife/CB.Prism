@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 
 namespace CB.Prism.Interactivity
