@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CB.Prism.Interactivity
 {
-    public class InteractionContextRequest<T>: IInteractionContextRequest where T: IContextRequestObject
+    /*public class InteractionContextRequest<T>: IInteractionContextRequest where T: IContextRequestObject
     {
         #region Events
         public event EventHandler<ContextRequestEventArgs> Raised;
@@ -21,7 +21,7 @@ namespace CB.Prism.Interactivity
         public Task<T> RaiseAsync(T context)
             => CallbackHelper.AwaitCallbackResult<T>(callback => Raise(context, callback));
         #endregion
-    }
+    }*/
 }
 
 // TODO: Test InteractionContextRequest (NotifyRequestProvider)

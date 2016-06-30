@@ -85,9 +85,12 @@
     <Compile Include="ConfirmContext.cs" />
     <Compile Include="ConfirmRequestProvider.cs" />
     <Compile Include="FileDialogInfo.cs" />
+    <Compile Include="FileRequestProvider.cs" />
+    <Compile Include="ICommonInteractionRequest.cs" />
     <Compile Include="IInteractionContextRequest.cs" />
     <Compile Include="InteractionContextRequest.cs" />
     <Compile Include="NotifyRequestProvider.cs" />
+    <Compile Include="RequestManager.cs" />
     <Compile Include="RequestProviderBase.cs" />
     <Compile Include="WindowRequestAction.cs" />
     <Compile Include="INotifyContext.cs" />
