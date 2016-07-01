@@ -1,5 +1,7 @@
 using System;
 using System.Windows;
+using System.Windows.Interop;
+using CB.Xaml.AttachedProperties;
 using EventTrigger = System.Windows.Interactivity.EventTrigger;
 
 
@@ -22,6 +24,7 @@ namespace CB.Prism.Interactivity
             switch (args.RequestAction)
             {
                 case WindowRequestAction.Close:
+                    WindowServices.SetCloseToHide(window, false);
                     window.Close();
                     break;
                 case WindowRequestAction.Show:
@@ -44,6 +47,14 @@ namespace CB.Prism.Interactivity
                     break;
                 case WindowRequestAction.ShowDialog:
                     window.ShowDialog();
+                    break;
+                case WindowRequestAction.OK:
+                    if (ComponentDispatcher.IsThreadModal) window.DialogResult = true;
+                    window.Close();
+                    break;
+                case WindowRequestAction.Cancel:
+                    if (ComponentDispatcher.IsThreadModal) window.DialogResult = false;
+                    window.Close();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -9,6 +9,8 @@ namespace CB.Prism.Interactivity
         Maximize,
         Restore,
         Activate,
-        ShowDialog
+        ShowDialog,
+        OK,
+        Cancel
     }
 }
