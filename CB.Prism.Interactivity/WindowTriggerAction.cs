@@ -50,32 +50,6 @@ namespace CB.Prism.Interactivity
 
 
         #region Override
-        /*protected override void Invoke(object parameter)
-        {
-            if (Window == null && WindowType == null)
-            {
-                OpenDefaultWindow(parameter);
-                return;
-            }
-
-            var args = parameter as RequestEventArgs<IRequestContext>;
-            if (args == null)
-            {
-                return;
-            }
-
-            var window = InitializeWindow(args);
-
-            if (IsModal)
-            {
-                window.ShowDialog();
-            }
-            else
-            {
-                window.Show();
-            }
-        }*/
-
         protected override void Invoke(object parameter)
         {
             var args = parameter as ContextRequestEventArgs;
@@ -142,50 +116,6 @@ namespace CB.Prism.Interactivity
             fileDialogInfo.FileNames = fileDialog.FileNames;
         }
 
-        /*private Window GetOrCreateWindow(RequestEventArgs<IRequestContext> args)
-        {
-            var window = Window ?? (Window)Activator.CreateInstance(WindowType);
-
-            if (_closedWindows.Contains(window))
-            {
-                _closedWindows.Remove(Window);
-                window = (Window)Activator.CreateInstance(window.GetType());
-            }
-
-            window.DataContext = args.Context;
-            window.Title = args.Context.Title;
-            var callback = args.Callback;
-            EventHandler handler = null;
-
-            handler = delegate
-            {
-                _closedWindows.Add(window);
-                window.Closed -= handler;
-
-                var confirmationContext = args.Context as IConfirmContext;
-                if (confirmationContext != null) confirmationContext.Confirmed = window.DialogResult == true;
-
-                callback?.Invoke();
-            };
-            window.Closed += handler;
-
-            if (!CenterOverAssociatedObject || AssociatedObject == null) return window;
-
-            SizeChangedEventHandler sizeHandler = null;
-            sizeHandler = delegate
-            {
-                window.SizeChanged -= sizeHandler;
-
-                var view = AssociatedObject;
-                var position = view.PointToScreen(new Point(0, 0));
-
-                window.Top = position.Y + (view.ActualHeight - window.ActualHeight) / 2;
-                window.Left = position.X + (view.ActualWidth - window.ActualWidth) / 2;
-            };
-            window.SizeChanged += sizeHandler;
-            return window;
-        }*/
-
         private Window InitializeWindow(ContextRequestEventArgs args)
         {
             var window = (Window)Activator.CreateInstance(WindowType);
@@ -223,49 +153,6 @@ namespace CB.Prism.Interactivity
             window.SizeChanged += sizeHandler;
             return window;
         }
-
-        /*private static void OpenDefaultWindow(object parameter)
-        {
-            var args = parameter as RequestEventArgs<IConfirmContext>;
-            if (args == null) return;
-
-            var saveFileDialogInfo = args.Context as ISaveFileDialogInfo;
-            if (saveFileDialogInfo != null)
-            {
-                var saveFileDialog = new SaveFileDialog
-                {
-                    CreatePrompt = saveFileDialogInfo.CreatePrompt,
-                    OverwritePrompt = saveFileDialogInfo.OverwritePrompt
-                };
-
-                HandleFileDialog(saveFileDialogInfo, saveFileDialog);
-                args.Callback?.Invoke();
-                return;
-            }
-
-            var openFileDialogInfo = args.Context as IOpenFileDialogInfo;
-            if (openFileDialogInfo != null)
-            {
-                var openFileDialog = new OpenFileDialog
-                {
-                    Multiselect = openFileDialogInfo.MultiSelect,
-                    ReadOnlyChecked = openFileDialogInfo.ReadOnlyChecked,
-                    ShowReadOnly = openFileDialogInfo.ShowReadOnly
-                };
-
-                HandleFileDialog(openFileDialogInfo, openFileDialog);
-                args.Callback?.Invoke();
-                return;
-            }
-
-            var browseFolderDialogInfo = args.Context as IBrowseFolderDialogInfo;
-            if (browseFolderDialogInfo != null)
-            {
-                var browseFolderDialog = new FolderBrowserDialog();
-                OpenFolderDialog(browseFolderDialogInfo, browseFolderDialog);
-                args.Callback?.Invoke();
-            }
-        }*/
 
         private static void OpenDefaultWindow(ContextRequestEventArgs args)
         {

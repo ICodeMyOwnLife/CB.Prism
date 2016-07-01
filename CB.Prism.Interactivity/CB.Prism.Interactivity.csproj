@@ -84,6 +84,7 @@
     <Compile Include="CommonInteractionRequest.cs" />
     <Compile Include="ConfirmContext.cs" />
     <Compile Include="ConfirmRequestProvider.cs" />
+    <Compile Include="DragDropCommandProvider.cs" />
     <Compile Include="FileDialogInfo.cs" />
     <Compile Include="FileRequestProvider.cs" />
     <Compile Include="ICommonInteractionRequest.cs" />

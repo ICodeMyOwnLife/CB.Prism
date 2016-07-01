@@ -26,6 +26,9 @@ namespace CB.Prism.Interactivity
 
 
         #region Methods
+        public void Raise(WindowRequestAction action)
+            => Request.Raise(action);
+
         public void Raise(object parameter)
         {
             WindowRequestAction action;
@@ -41,7 +44,7 @@ namespace CB.Prism.Interactivity
 
                 action = (WindowRequestAction)value;
             }
-            Request.Raise(action);
+            Raise(action);
         }
         #endregion
     }
