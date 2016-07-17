@@ -81,6 +81,9 @@
   <ItemGroup>
     <Compile Include="BrowseFolderDialogInfo.cs" />
     <Compile Include="CallbackHelper.cs" />
+    <Compile Include="Impl\FindCommandOption.cs" />
+    <Compile Include="Impl\CommandParameterOptionHelper.cs" />
+    <Compile Include="Impl\CommandParameterOption.cs" />
     <Compile Include="CommonInteractionRequest.cs" />
     <Compile Include="ConfirmContext.cs" />
     <Compile Include="ConfirmRequestProvider.cs" />
@@ -91,8 +94,11 @@
     <Compile Include="IInteractionContextRequest.cs" />
     <Compile Include="InteractionContextRequest.cs" />
     <Compile Include="NotifyRequestProvider.cs" />
+    <Compile Include="Impl\ReflectionHelper.cs" />
     <Compile Include="RequestManager.cs" />
     <Compile Include="RequestProviderBase.cs" />
+    <Compile Include="RoutedEventToCommandBehavior.cs" />
+    <Compile Include="RoutedEventTrigger.cs" />
     <Compile Include="WindowRequestAction.cs" />
     <Compile Include="INotifyContext.cs" />
     <Compile Include="NotifyContext.cs" />
