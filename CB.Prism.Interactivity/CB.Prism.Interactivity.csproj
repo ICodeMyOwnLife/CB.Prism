@@ -67,6 +67,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
@@ -79,8 +80,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalloonIcon.cs" />
+    <Compile Include="BalloonNotification.cs" />
+    <Compile Include="BalloonNotifyRequestProvider.cs" />
     <Compile Include="BrowseFolderDialogInfo.cs" />
     <Compile Include="CallbackHelper.cs" />
+    <Compile Include="CustomIconBalloonNotification.cs" />
+    <Compile Include="IBalloonNotify.cs" />
+    <Compile Include="ICustomIconBallonNotify.cs" />
     <Compile Include="Impl\FindCommandOption.cs" />
     <Compile Include="Impl\CommandParameterOptionHelper.cs" />
     <Compile Include="Impl\CommandParameterOption.cs" />
@@ -93,12 +100,16 @@
     <Compile Include="ICommonInteractionRequest.cs" />
     <Compile Include="IInteractionContextRequest.cs" />
     <Compile Include="InteractionContextRequest.cs" />
+    <Compile Include="IShowBalloonTip.cs" />
+    <Compile Include="ISymbolBalloonNotify.cs" />
     <Compile Include="NotifyRequestProvider.cs" />
     <Compile Include="Impl\ReflectionHelper.cs" />
     <Compile Include="RequestManager.cs" />
     <Compile Include="RequestProviderBase.cs" />
     <Compile Include="RoutedEventToCommandBehavior.cs" />
     <Compile Include="RoutedEventTrigger.cs" />
+    <Compile Include="ShowNotificationAction.cs" />
+    <Compile Include="SymbolBallonNotification.cs" />
     <Compile Include="WindowRequestAction.cs" />
     <Compile Include="INotifyContext.cs" />
     <Compile Include="NotifyContext.cs" />
@@ -129,6 +140,10 @@
     <ProjectReference Include="..\..\CB.Xaml\CB.Xaml.AttachedProperties\CB.Xaml.AttachedProperties.csproj">
       <Project>{1ccb7f4e-228a-4a8e-a211-a032c9c8767b}</Project>
       <Name>CB.Xaml.AttachedProperties</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CB.Xaml\CB.Xaml.Interactivity\CB.Xaml.Interactivity.csproj">
+      <Project>{0c28cc8c-9e4d-4113-bfb2-0119f2a25d7e}</Project>
+      <Name>CB.Xaml.Interactivity</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
