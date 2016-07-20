@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using CB.Xaml.Interactivity;
 
@@ -16,6 +17,7 @@ namespace CB.Prism.Interactivity
             var symbolBalloonNotify = args.Context as ISymbolBalloonNotify;
             if (symbolBalloonNotify != null)
             {
+                HookCallback(args, notifier);
                 notifier.ShowBalloonTip(symbolBalloonNotify.Title, symbolBalloonNotify.Content.ToString(),
                     symbolBalloonNotify.Symbol, symbolBalloonNotify.SoundSource, symbolBalloonNotify.Loop);
                 return;
@@ -24,10 +26,26 @@ namespace CB.Prism.Interactivity
             var customIconBalloonNotify = args.Context as ICustomIconBallonNotify;
             if (customIconBalloonNotify != null)
             {
+                HookCallback(args, notifier);
                 notifier.ShowBalloonTip(customIconBalloonNotify.Title, customIconBalloonNotify.Content.ToString(),
                     customIconBalloonNotify.CustomIcon, customIconBalloonNotify.LargeIcon,
                     customIconBalloonNotify.SoundSource, customIconBalloonNotify.Loop);
             }
+        }
+        #endregion
+
+
+        #region Implementation
+        private static void HookCallback(ContextRequestEventArgs args, IShowBalloonTip notifier)
+        {
+            EventHandler handler = null;
+
+            handler = (sender, eventArgs) =>
+            {
+                args.Callback?.Invoke();
+                notifier.BalloonTipClosed -= handler;
+            };
+            notifier.BalloonTipClosed += handler;
         }
         #endregion
     }
